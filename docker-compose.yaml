@@ -1,0 +1,22 @@
+name: docStore
+services:
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+    ports:
+      - "8000:5000"
+    volumes:
+      - ./backend/:/usr/src/app
+    env_file:
+      - .env
+
+  database:
+    container_name: database
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    ports:
+      - "1433:1433"
+    environment:
+      - "ACCEPT_EULA=Y"
+      - "MSSQL_SA_PASSWORD=Docstore12345"
+  

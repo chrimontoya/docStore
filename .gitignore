@@ -1,0 +1,71 @@
+# ==========================================
+# 🐍 Entornos Virtuales y Dependencias (Python)
+# ==========================================
+.venv/
+venv/
+ENV/
+env/
+bin/
+include/
+lib/
+lib64/
+share/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.nox/
+.egg-info/
+.eggs/
+eggs/
+develop-eggs/
+downloads/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+
+# ==========================================
+# 🔒 Seguridad y Configuración (¡Crítico!)
+# ==========================================
+.env
+.env.*
+!.env.example
+instance/
+.secret
+.secrets
+secrets.*
+
+# ==========================================
+# 🗄️ Caché de Ejecución y Compilación
+# ==========================================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ==========================================
+# 📦 Docker (Si lo usas para SQL Server)
+# ==========================================
+.docker/
+docker-compose.override.yml
+
+# ==========================================
+# 💻 Configuración de Editores e IDEs
+# ==========================================
+# VS Code
+.vscode/
+!.vscode/extensions.json
+*.code-workspace
+
+# PyCharm / IntelliJ
+.idea/
+
+# Sistema Operativo
+.DS_Store
+Thumbs.db
