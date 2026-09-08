@@ -14,3 +14,6 @@ class DatabaseConfig(Config):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 db = SQLAlchemy(model_class=Base)
+
+class JWTConfig(Config):
+    JWT_SECRET_KEY = 'secret.key.1234'
