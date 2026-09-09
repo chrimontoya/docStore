@@ -3,7 +3,7 @@ from .config import DatabaseConfig, db, JWTConfig
 from sqlalchemy import text
 from flask_jwt_extended import JWTManager
 from .auth.routes.auth_route import bp_auth
-
+from .error_handlers import register_error_handlers
 def create_app():
     app = Flask(__name__)
     app.register_blueprint(bp_auth)
@@ -12,6 +12,7 @@ def create_app():
 
     app.config.from_object(DatabaseConfig)
     app.config.from_object(JWTConfig)
+    register_error_handlers(app)
     db.init_app(app)
     with app.app_context():
         res = db.session.execute(text("SELECT 1")).scalar()

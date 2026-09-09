@@ -9,7 +9,9 @@ class AuthService:
         user = self.auth_repository.find_by_email(email=username)
         if not user:
             return None
-        return self.verify_hash_password(password, user.password_hash)
+        if not self.verify_hash_password(password, user.password_hash):
+            return None
+        return user
 
     def get_hash_password(self, password: str):
         hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
@@ -17,3 +19,6 @@ class AuthService:
 
     def verify_hash_password(self,password:str, hashed_password: str):
         return bcrypt.checkpw(password.encode('utf-8'), hashed_password.encode('utf-8'))
+
+    def update_last_login_at(self, user):
+        return self.auth_repository.update_last_login_at(user)

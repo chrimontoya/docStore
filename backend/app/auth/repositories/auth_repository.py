@@ -1,5 +1,6 @@
 from ...config import db
 from ...users.models.user import User
+from datetime import datetime, timezone
 class AuthRepository:
 
     def __init__(self):
@@ -10,3 +11,8 @@ class AuthRepository:
         if not user:
             return None
         return user
+
+    def update_last_login_at(self, user):
+        user.last_login_at = datetime.now(timezone.utc)
+        db.session.commit()
+        return True
