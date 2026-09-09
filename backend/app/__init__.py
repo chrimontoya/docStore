@@ -19,6 +19,12 @@ def create_app():
         if res == 1:
             current_app.logger.debug('Conexión a DB ON')
             from .users.models.user import User
+            from .documents.models.document import Document
+            from .documents.models.document_file import DocumentFile
+            from .documents.models.document_tag import DocumentTag
+            from .folders.models.folder import Folder
+            from .tags.models.tag import Tag
+            from .activity.models.activity import Activity
             db.create_all()
         else:
             current_app.logger.debug('Conexión a DB OFF')
