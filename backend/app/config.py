@@ -6,6 +6,9 @@ from sqlalchemy.orm import DeclarativeBase
 class Base(DeclarativeBase):
     pass
 
+class DefaultConfig(Config):
+    MAX_FORM_MEMORY_SIZE = getenv('MAX_FORM_MEMORY_SIZE', 25000000)
+
 class DatabaseConfig(Config):
     SQLALCHEMY_DATABASE_URI = getenv(
         "DB_URI",

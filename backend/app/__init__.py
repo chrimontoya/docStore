@@ -1,17 +1,20 @@
 from flask import Flask, current_app
-from .config import DatabaseConfig, db, JWTConfig
+from .config import DatabaseConfig, db, JWTConfig, DefaultConfig
 from sqlalchemy import text
 from flask_jwt_extended import JWTManager
 from .auth.routes.auth_route import bp_auth
+from .documents.routes.document_route import bp_document
 from .error_handlers import register_error_handlers
 def create_app():
     app = Flask(__name__)
     app.register_blueprint(bp_auth)
+    app.register_blueprint(bp_document)
     app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
     jwt = JWTManager(app)
 
     app.config.from_object(DatabaseConfig)
     app.config.from_object(JWTConfig)
+    app.config.from_object(DefaultConfig)
     register_error_handlers(app)
     db.init_app(app)
     with app.app_context():
