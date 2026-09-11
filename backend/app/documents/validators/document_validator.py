@@ -1,9 +1,8 @@
-import os
+import os, mimetypes
 import re
 import unicodedata
 from werkzeug.datastructures import FileStorage
-
-
+from ...exceptions import DefaultError
 class DocumentValidator:
     def __init__(self, file: FileStorage):
         self.file = file
@@ -15,15 +14,27 @@ class DocumentValidator:
         file_length = self.file.tell()
         self.file.seek(0)
         if file_length < 0:
-            raise Exception
+            raise DefaultError('DOCUMENT_ERROR', 'Error al validar max size documento', 500)
 
     def validate_extension(self):
         if not self.file.filename[-4:] in self.extensions_accepted:
-            raise Exception
+            raise DefaultError('DOCUMENT_ERROR', 'Error al validar extensión documento', 500)
 
     def validate_mime_type(self):
-        if self.file.mimetype not in self.mime_types_accepted:
-            raise Exception
+        received_mime = self.file.mimetype
+
+        if received_mime == 'application/octet-stream':
+            detected_mime, _ = mimetypes.guess_type(self.file.filename)
+        else:
+            detected_mime = received_mime
+
+        if detected_mime not in self.mime_types_accepted:
+            raise DefaultError(
+                'DOCUMENT_ERROR',
+                f'Error al validar mimeType documento {detected_mime}',
+                400
+            )
+        return detected_mime
 
     def sanitize_filename(self, filename: str, max_length: int = 150) -> str:
         filename = os.path.basename(filename)
