@@ -9,3 +9,8 @@ def upload():
     document_service.create(request.files, request.form)
 
     return "ok", 200
+
+@bp_document.route("", methods=['GET'])
+def get_all():
+    document_service = DocumentService()
+    return document_service.find(request.args), 200

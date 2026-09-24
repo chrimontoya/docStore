@@ -1,6 +1,6 @@
 from datetime import datetime
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ...config import Base
 
 class DocumentTag(Base):
@@ -9,3 +9,11 @@ class DocumentTag(Base):
     tag_id: Mapped[int] = mapped_column(ForeignKey("tags.id"), primary_key=True)
     assigned_at: Mapped[datetime] = mapped_column()
     assigned_by_user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    document = relationship(
+        'Document',
+        back_populates='document_tags',
+    )
+    tag = relationship(
+        'Tag',
+        back_populates='document_tags',
+    )

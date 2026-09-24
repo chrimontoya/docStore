@@ -1,7 +1,7 @@
 from werkzeug.datastructures import FileStorage, ImmutableMultiDict
 from pathlib import Path
 
-from exceptions import DefaultError
+from ...exceptions import DefaultError
 from ..validators.document_validator import DocumentValidator
 from ..models.document import Document
 from ..models.document_file import DocumentFile
@@ -103,3 +103,17 @@ class DocumentService:
                 'No se pudo crear el documento',
                 500
             ) from exc
+
+    def find(self, args=None):
+        try:
+            if args is None:
+                args = {}
+            pagination = int(args.get('pagination')) if args.get('pagination') else 0
+            documents = self.document_repository.find(data=args, pagination=pagination)
+            return [x.to_dict() for x in documents]
+        except Exception as exc:
+            raise DefaultError(
+                'DOCUMENT_ERROR',
+                'No se lograron filtrar los documentos',
+                500
+            )

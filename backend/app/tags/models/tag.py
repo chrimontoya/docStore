@@ -1,6 +1,9 @@
 from datetime import datetime
+from typing import List
+
 from sqlalchemy import ForeignKey, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from ...config import Base
 
 class Tag(Base):
@@ -11,3 +14,7 @@ class Tag(Base):
     color: Mapped[int] = mapped_column(nullable=True)
     created_at: Mapped[datetime] = mapped_column(nullable=False)
     deleted_at: Mapped[datetime] = mapped_column(nullable=True)
+    document_tags = relationship(
+        'DocumentTag',
+        back_populates='tag',
+    )
