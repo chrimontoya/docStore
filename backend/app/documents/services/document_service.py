@@ -1,3 +1,6 @@
+from io import BytesIO
+
+from flask import send_file
 from werkzeug.datastructures import FileStorage, ImmutableMultiDict
 from pathlib import Path
 
@@ -91,6 +94,13 @@ class DocumentService:
                     )
                 )
 
+                UPLOADS_DIR = Path("uploads")
+                UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
+
+                file_path = UPLOADS_DIR / (
+                    f"{document_file.storage_key}{document_file.extension}"
+                )
+                file.save(file_path)
             self.sql.commit()
             return True
         except DefaultError:
@@ -146,3 +156,47 @@ class DocumentService:
                 'No se obtuvo el documento',
                 400
             ) from exc
+
+    def get_content_file(self, id: int):
+        document_file = self.document_repository.find_doc_file_by_id(id)
+        if not document_file:
+            return None
+
+        UPLOADS_DIR = Path("/usr/src/app/uploads")
+        file_path = UPLOADS_DIR / (
+            f"{document_file.storage_key}{document_file.extension}"
+        )
+        from flask import current_app
+        current_app.logger.debug(file_path)
+
+        if not file_path.exists():
+            raise DefaultError(
+                "FILE_NOT_FOUND",
+                "El archivo no existe",
+                404
+            )
+
+        #validator mimetype pendiente
+        # with open(file_path, "rb") as file:
+        #     content = file.read()
+        #     validator = DocumentValidator(
+        #         FileStorage(
+        #             stream=BytesIO(content),
+        #             filename=document_file.original_filename,
+        #             content_type='asfasf',
+        #         )
+        #     )
+        #     try:
+        #         validator.validate_mime_type()
+        #     except DefaultError as e:
+        #         if e.code == 'DOCUMENT_ERROR':
+        #             return dict({
+        #
+        #             })
+
+        return send_file(
+            file_path,
+            mimetype=document_file.mime_type,
+            as_attachment=True,
+            download_name=document_file.original_filename,
+        )

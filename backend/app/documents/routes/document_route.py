@@ -24,3 +24,8 @@ def get(id: int = 0):
     if not document_detail:
         return "error", 400
     return document_detail, 200
+
+@bp_document.route("/<id>/content", methods=['GET'])
+def get_content(id: int = 0):
+    document_service = DocumentService()
+    return document_service.get_content_file(int(id)), 200

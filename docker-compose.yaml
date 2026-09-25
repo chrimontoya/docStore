@@ -19,4 +19,14 @@ services:
     environment:
       - "ACCEPT_EULA=Y"
       - "MSSQL_SA_PASSWORD=Docstore12345"
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+    ports:
+      - "8001:4200"
+    volumes:
+      - ./frontend/:/usr/src/app
+      - /usr/src/app/node_modules
   

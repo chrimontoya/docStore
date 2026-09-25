@@ -1,0 +1,55 @@
+@use '@angular/material' as mat;
+@use '../_theme-colors' as colors;
+
+html {
+  height: 100%;
+  @include mat.theme(
+    (
+      color: (
+        primary: colors.$primary-palette,
+        tertiary: colors.$tertiary-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+body {
+  color-scheme: light;
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+  margin: 0;
+  height: 100%;
+}
+
+.button-primary {
+  --mat-button-filled-container-color: var(--mat-sys-primary);
+  --mat-button-filled-label-text-color: var(--mat-sys-on-primary);
+}
+
+.button-secondary {
+  --mat-button-filled-container-color: var(--mat-sys-secondary);
+  --mat-button-filled-label-text-color: var(--mat-sys-on-secondary);
+}
+
+.button-error {
+  --mat-button-filled-container-color: var(--mat-sys-error);
+  --mat-button-filled-label-text-color: var(--mat-sys-on-error);
+}
+
+.button-tertiary {
+  --mat-button-filled-container-color: var(--mat-sys-tertiary);
+  --mat-button-filled-label-text-color: var(--mat-sys-on-tertiary);
+}
+
+.surface {
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+
+.surface-container {
+  background-color: var(--mat-sys-surface-container);
+  color: var(--mat-sys-on-surface);
+}

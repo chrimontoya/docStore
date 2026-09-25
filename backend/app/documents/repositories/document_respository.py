@@ -87,3 +87,15 @@ class DocumentRepository:
         except Exception as e:
             db.session.rollback()
             raise DefaultError('SQLERROR', str(e), 500)
+
+    def find_doc_file_by_id(self, id: int):
+        try:
+            return db.session.execute(
+                db.select(DocumentFile)
+                .join(Document, Document.id == DocumentFile.document_id)
+                .where(DocumentFile.document_id == id)
+                .where(Document.status == 1)
+            ).scalar_one()
+        except Exception as e:
+            db.session.rollback()
+            raise DefaultError('SQLERROR', str(e), 500)
