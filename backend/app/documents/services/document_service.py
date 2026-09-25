@@ -116,4 +116,33 @@ class DocumentService:
                 'DOCUMENT_ERROR',
                 'No se lograron filtrar los documentos',
                 500
-            )
+            ) from exc
+
+    def get_document_detail(self, id: int):
+        try:
+            document = self.document_repository.get_document_detail(id)
+            if not document:
+                return None
+            keys = [
+                "id",
+                "title",
+                "original_filename",
+                "mime_type",
+                "extension",
+                "size_bytes",
+                "folder_name",
+                "tag_name",
+                "created_at",
+                "status",
+                "details",
+            ]
+            document_detail = dict({})
+            for k in keys:
+                document_detail.update({k: document[0].get(k)})
+            return document_detail
+        except Exception as exc:
+            raise DefaultError(
+                'DOCUMENT_ERROR',
+                'No se obtuvo el documento',
+                400
+            ) from exc

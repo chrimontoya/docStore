@@ -1,3 +1,5 @@
+import json
+
 from flask import Blueprint, current_app, request
 from ..services.document_service import DocumentService
 
@@ -14,3 +16,11 @@ def upload():
 def get_all():
     document_service = DocumentService()
     return document_service.find(request.args), 200
+
+@bp_document.route("/<id>", methods=['GET'])
+def get(id: int = 0):
+    document_service = DocumentService()
+    document_detail = document_service.get_document_detail(int(id))
+    if not document_detail:
+        return "error", 400
+    return document_detail, 200

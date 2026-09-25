@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from ...activity.models.activity import Activity
 from ...utils import get_init_date
 from ..models.document_file import DocumentFile
 from ..models.document_tag import DocumentTag
@@ -58,3 +59,31 @@ class DocumentRepository:
 
         documents = session
         return documents
+
+    def get_document_detail(self, id: int):
+        try:
+            #PENDIENTE FITLRAR POR USUARIO
+            return db.session.execute(
+                db.select(
+                    Document.id,
+                    Document.title,
+                    DocumentFile.original_filename,
+                    DocumentFile.mime_type,
+                    DocumentFile.extension,
+                    DocumentFile.size_bytes,
+                    Folder.name.label("folder_name"),
+                    Tag.name.label("tag_name"),
+                    Document.created_at,
+                    Document.status,
+                    Activity.details,
+                )
+                .select_from(Document)
+               .join(DocumentFile, DocumentFile.document_id == Document.id)
+                .outerjoin(DocumentTag, DocumentTag.document_id == DocumentFile.document_id)
+                .outerjoin(Folder, Folder.id == Document.folder_id)
+                .outerjoin(Activity, Activity.document_id == DocumentTag.document_id)
+                .where(Document.id == id)
+            ).mappings().all()
+        except Exception as e:
+            db.session.rollback()
+            raise DefaultError('SQLERROR', str(e), 500)
