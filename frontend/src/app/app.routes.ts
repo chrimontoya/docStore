@@ -1,3 +1,6 @@
 import { Routes } from '@angular/router';
 
-export const routes: Routes = [];
+const routes: Routes = [
+  { path: 'login', loadComponent: ()=> import('./features/auth/pages/login-component/login-component') },
+];
+export default routes

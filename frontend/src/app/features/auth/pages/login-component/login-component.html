@@ -1,0 +1,86 @@
+<div class="d-flex-row align-items-center h-100 w-100">
+  <section class="d-flex-column h-100 justify-content-center align-content-center">
+    <h4 i18n="@@frontPage.title">
+      Todo lo importante, en un solo lugar.
+    </h4>
+
+    <h1 i18n="@@frontPage.slogan">
+      Tu biblioteca documental
+    </h1>
+
+    <p i18n="@@frontPage.subTitle">
+      Organiza, consulta y protege tus documentos con una experiencia simple y personal.
+    </p>
+
+    <ul>
+      <li i18n="@@frontPage.item1">
+        Documentos organizados por carpetas y etiquetas
+      </li>
+      <li i18n="@@frontPage.item2">
+        Búsqueda rápida por título y nombre de archivo
+      </li>
+      <li i18n="@@frontPage.item3">
+        Acceso seguro a tu biblioteca personal
+      </li>
+    </ul>
+
+    <footer i18n="@@frontPage.footer">
+      DocStore MVP · Gestión documental personal
+    </footer>
+  </section>
+  <main class="">
+    <mat-card class="container-form">
+      <form [formGroup]="form" class="login-form">
+        <h1 i18n="@@login.title">Iniciar sesión</h1>
+        <p i18n="@@login.subTitle">
+          Ingresa tus credenciales para acceder a tu biblioteca
+        </p>
+
+        @for (control of controls; track control.order) {
+          <mat-form-field [appearance]="control.appearance" class="control">
+            <mat-label>{{ control.label }}</mat-label>
+            <input
+              matInput
+              [formControlName]="control.name"
+              [placeholder]="control.placeholder"
+              [type]="control.type">
+            @if (control.name === 're-password' && form.hasError('samePassword')) {
+              <mat-error i18n="@@login.samePassword">
+                Las contraseñas no coinciden.
+              </mat-error>
+            }
+          </mat-form-field>
+        }
+
+        <span class="d-flex-row align-items-center justify-content-between">
+      <mat-checkbox [formControl]="keepLoggedIn" [disabled]="form.invalid">
+      <span i18n="@@login.checkbox">Mantener sesión iniciada</span>
+    </mat-checkbox>
+
+    <a href="#" i18n="@@login.forgotpass">¿Olvidaste tu contraseña?</a>
+    </span>
+
+        <button mat-flat-button class="btn-login" i18n="@@login.btnLogin" [disabled]="form.invalid"
+                (click)="login()">
+          Iniciar sesión
+        </button>
+
+        <p class="txt-center mb d-flex-row justify-content-center">
+          <span i18n="@@login.createAccount">¿No tienes una cuenta?</span>
+          <a href="#" i18n="@@login.createAccount2" style="margin-left: 2px">Crear cuenta</a>
+        </p>
+
+        <mat-divider></mat-divider>
+
+        <p>
+          <strong i18n="@@login.accessProtected">Acceso protegido.</strong>
+          <span i18n="@@login.accessProtected2">
+      Tus documentos pertenecen únicamente a tu usuario autenticado.
+    </span>
+        </p>
+      </form>
+    </mat-card>
+
+  </main>
+
+</div>

@@ -3,6 +3,7 @@
 
 html {
   height: 100%;
+  box-sizing: border-box;
   @include mat.theme(
     (
       color: (
@@ -13,6 +14,12 @@ html {
       density: 0,
     )
   );
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
 }
 
 body {
@@ -50,6 +57,60 @@ body {
 }
 
 .surface-container {
-  background-color: var(--mat-sys-surface-container);
+  background-color: var(--mat-sys-background);
   color: var(--mat-sys-on-surface);
+}
+
+.control {
+  width: 100%;
+  margin: 5px 0;
+}
+
+.d-flex-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.d-flex-column {
+  display: inline-block;
+}
+.justify-content-center {
+  justify-content: center;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.justify-space-around {
+  justify-content: space-around;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.align-content-center {
+  align-content: center;
+}
+
+.txt-center {
+  text-align: center;
+}
+
+.mb {
+  margin-bottom: 10px;
+}
+
+.my {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.h-100 {
+  height: 100%;
+}
+
+.w-100 {
+  width: 100%;
 }

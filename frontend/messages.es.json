@@ -1,0 +1,30 @@
+{
+  "locale": "es",
+  "translations": {
+    "frontPage.title": "Todo lo importante, en un solo lugar.",
+    "frontPage.slogan": "Tu biblioteca documental",
+    "frontPage.subTitle": "Organiza, consulta y protege tus documentos con una experiencia simple y personal.",
+    "frontPage.item1": "Documentos organizados por carpetas y etiquetas",
+    "frontPage.item2": "Búsqueda rápida por título y nombre de archivo",
+    "frontPage.item3": "Acceso seguro a tu biblioteca personal",
+    "frontPage.footer": "DocStore MVP · Gestión documental personal",
+    "login.name": "Nombre",
+    "login.name.placeholder": "María Gonzalez",
+    "login.email": "Correo",
+    "login.email.placeholder": "tu@correo.cl",
+    "login.password": "Contraseña",
+    "login.password.placeholder": "Ingresa tu contraseña",
+    "login.confirmPassword": "Confirmar contraseña",
+    "login.confirmPassword.placeholder": "Repite tu contraseña",
+    "login.title": "Iniciar sesión",
+    "login.subTitle": "Ingresa tus credenciales para acceder a tu biblioteca",
+    "login.checkbox": "Mantener sesión iniciada",
+    "login.forgotpass": "¿Olvidaste tu contraseña?",
+    "login.createAccount": "¿No tienes una cuenta?",
+    "login.createAccount2": "Crear cuenta",
+    "login.accessProtected": "Acceso protegido.",
+    "login.accessProtected2": "Tus documentos pertenecen únicamente a tu usuario autenticado.",
+    "login.btnLogin": "Iniciar sesión",
+    "login.samePassword": "Las contraseñas no coinciden."
+  }
+}
