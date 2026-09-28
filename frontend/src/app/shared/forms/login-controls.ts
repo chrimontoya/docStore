@@ -2,13 +2,13 @@ import {Control} from '../classes/control.class';
 import {Validators} from '@angular/forms';
 
 export const loginControls: Control[] = [
-  new Control({
-    name: 'name',
-    label: $localize`:@@login.name:Name`,
-    placeholder: $localize`:@@login.name.placeholder:Name`,
-    order: 1,
-    validators: [Validators.required],
-  }),
+  // new Control({
+  //   name: 'name',
+  //   label: $localize`:@@login.name:Name`,
+  //   placeholder: $localize`:@@login.name.placeholder:Name`,
+  //   order: 1,
+  //   validators: [Validators.required],
+  // }),
   new Control({
     name: 'email',
     label: $localize`:@@login.email:Email`,

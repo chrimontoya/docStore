@@ -1,4 +1,5 @@
 from flask import Flask, current_app
+from flask_cors import CORS
 from .config import DatabaseConfig, db, JWTConfig, DefaultConfig
 from sqlalchemy import text
 from flask_jwt_extended import JWTManager
@@ -7,6 +8,7 @@ from .documents.routes.document_route import bp_document
 from .error_handlers import register_error_handlers
 def create_app():
     app = Flask(__name__)
+    CORS(app)
     app.register_blueprint(bp_auth)
     app.register_blueprint(bp_document)
     app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!

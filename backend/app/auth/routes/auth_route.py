@@ -18,7 +18,7 @@ def login():
     #update last login at
     auth_service.update_last_login_at(user_authenticated)
     access_token = create_access_token(identity=username)
-    return jsonify(access_token=access_token)
+    return jsonify(accessToken=access_token)
 
 @bp_auth.route("/register", methods=['POST'])
 def register():

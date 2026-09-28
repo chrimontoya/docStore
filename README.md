@@ -206,14 +206,23 @@ El MVP estar&aacute; listo cuando:
 
 ---
 
-## 🛠️ Instalaci&oacute;n y ejecuci&oacute;n (pendiente)
-
-> Esta secci&oacute;n se completar&aacute; cuando el proyecto est&eacute; implementado.
+## 🛠️ Instalaci&oacute;n y ejecuci&oacute;n
 
 ```bash
-# Ejemplo futuro:
-docker-compose up --build
+docker compose up --build
 ```
+
+El frontend queda disponible en `http://localhost:8001`. El servicio `frontend`
+incluye Node.js, npm y Angular CLI.
+
+En IntelliJ IDEA puedes elegir uno de estos runtimes:
+
+- **Runtime local:** usa `/opt/homebrew/bin/node`, que es la instalación de
+  Node.js en macOS mediante Homebrew.
+- **Runtime Docker:** selecciona `Docker Compose`, el archivo
+  `docker-compose.yaml` y el servicio `frontend`. Usa `/usr/src/app` como
+  directorio de trabajo; dentro del contenedor el ejecutable es
+  `/usr/local/bin/node`.
 
 ---
 
