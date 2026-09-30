@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>{{dialogData.title}}</h2>
+<mat-dialog-content>
+  <ng-container
+    *ngTemplateOutlet="
+    dialogData.templateRef;
+    context: { $implicit: dialogData.data }
+  ">
+  </ng-container>
+</mat-dialog-content>
+<mat-dialog-actions>
+  @for (action of dialogData.actions ?? []; track action.label) {
+
+    <button
+      mat-raised-button
+      [disabled]="action.disabled?.(dialogData.data) ?? false"
+      (click)="action.action(dialogData.data)">
+
+      @if (action.icon) {
+        <mat-icon>{{ action.icon }}</mat-icon>
+      }
+
+      {{ action.label }}
+
+    </button>
+
+  }
+</mat-dialog-actions>

@@ -19,3 +19,20 @@
 </mat-form-field>
 
 <app-dynamic-table-component [dataSource]="dataSource" [config]="config"></app-dynamic-table-component>
+
+
+
+<ng-template #documentViewTemplate let-document>
+  <p><strong>Identificador:</strong> {{ document.id }}</p>
+  <p><strong>Título:</strong> {{ document.title }}</p>
+  <p><strong>Nombre original:</strong> {{ document.originalFilename }}</p>
+  <p><strong>Descripción:</strong> {{ document.description }}</p>
+  <p><strong>Tipo documental:</strong> {{ document.documentType }}</p>
+  <p><strong>MIME type:</strong> {{ document.mimeType }}</p>
+  <p><strong>Extensión:</strong> {{ document.extension }}</p>
+  <p><strong>Tamaño:</strong> {{ document.sizeBytes }}</p>
+  <p><strong>Carpeta:</strong> {{ document.folderName }}</p>
+  <p><strong>Etiquetas:</strong> {{ document.tags }}</p>
+  <p><strong>Fechas relevantes:</strong> {{ document.createdAt }}</p>
+  <p><strong>Actividad reciente:</strong> {{ document.recentActivity }}</p>
+</ng-template>

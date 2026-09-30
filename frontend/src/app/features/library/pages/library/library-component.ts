@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, inject, OnInit, signal, TemplateRef, ViewChild} from '@angular/core';
 import {DocumentService} from '../../services/document.service';
 import {
   MatTableDataSource,
@@ -12,6 +12,9 @@ import {LibraryColumns} from '../../../../shared/forms/library-columns';
 import {DynamicTableComponent} from '../../../../shared/components/dynamic-table/dynamic-table-component';
 import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {Action} from '../../../../shared/classes/action.interface';
+import {Document} from '../../../../core/models/document.model';
+import {DynamicDialogComponent} from '../../../../shared/components/dynamic-dialog/dynamic-dialog-component';
 
 @Component({
   imports: [
@@ -28,21 +31,21 @@ import {FormControl, ReactiveFormsModule} from '@angular/forms';
   templateUrl: './library-component.html',
 })
 export class LibraryComponent implements OnInit {
+  @ViewChild('documentViewTemplate')
+  documentViewTemplate!: TemplateRef<{ $implicit: Document }>;
   documentsService: DocumentService = inject(DocumentService);
   documents: any[] = [];
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
   searchControl = new FormControl('');
-  uploadDialogRef = inject(MatDialog);
-  config: TableConfig<any> = {
+  dialogRef = inject(MatDialog);
+  config: TableConfig<Document> = {
     columns: LibraryColumns,
-    actions: <any>[
+    actions: [
       {
         id: '1',
         label: 'Ver detalle',
         icon: 'edit',
-        action: (row: any) => {
-
-        }
+        action: (row: any) => this.viewDetail(row),
       },
       {
         id: '2',
@@ -62,6 +65,7 @@ export class LibraryComponent implements OnInit {
       },
     ],
   };
+
 
   formats = [
     {
@@ -114,7 +118,7 @@ export class LibraryComponent implements OnInit {
   }
 
   openUploadDialog(): void {
-    const ref = this.uploadDialogRef.open(UploadDocument);
+    const ref = this.dialogRef.open(UploadDocument);
     ref.componentInstance.actionEvent.subscribe((res) => {
       if (res){
         this.documentsService.uploadFiles(res)
@@ -130,5 +134,39 @@ export class LibraryComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  viewDetail(document: Document){
+
+    const ref = this.dialogRef.open(DynamicDialogComponent<Document>,
+      {
+        data: {
+          title: 'Ver detalle',
+          data: document,
+          templateRef: this.documentViewTemplate,
+          actions: [
+            {
+              label: 'Cerrar',
+              action: (row) => {
+                ref.close();
+              },
+              color: "accent",
+            },
+            {
+              label: 'Previsualizar',
+              action: (row) => {
+                  this.documentsService.getDocumentContent(row.id)
+                    .subscribe((res) => {
+                      if (res){
+                        const url = URL.createObjectURL(res);
+                        window.open(url, '_blank');
+                        setTimeout(() => URL.revokeObjectURL(url), 1000);
+                      }
+                    })
+              },
+            },
+          ] as Action<Document>[]
+        }
+      })
   }
 }

@@ -29,3 +29,14 @@ def get_init_date(value: str = ''):
     )
     return date
 
+def parse_date(value: str):
+    if not value:
+        return ''
+
+    datetime_obj = datetime.fromisoformat(value)
+    expected_format = '%d %b.%Y'
+    date = datetime_obj.strftime(expected_format)
+    return date
+
+
+

@@ -4,6 +4,7 @@ from flask import send_file
 from werkzeug.datastructures import FileStorage, ImmutableMultiDict
 from pathlib import Path
 
+from ...utils import parse_date
 from ...exceptions import DefaultError
 from ..validators.document_validator import DocumentValidator
 from ..models.document import Document
@@ -125,8 +126,13 @@ class DocumentService:
             return [
                 {
                     **document,
+                    "createdAt": (
+                        parse_date(document["createdAt"].isoformat())
+                        if document["createdAt"]
+                        else None
+                    ),
                     "updatedAt": (
-                        document["updatedAt"].isoformat()
+                        parse_date(document["updatedAt"].isoformat())
                         if document["updatedAt"]
                         else None
                     ),

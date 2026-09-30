@@ -22,5 +22,13 @@ export class DocumentService {
     return this.http.post<any>(`${this.baseUrl}`, formData, {responseType: 'blob',});
   }
 
+  getDocumentContent(id: number) : Observable<Blob>{
+    return this.http.get<Blob>(`${this.baseUrl}/${id}/content`, {responseType: 'blob' as 'json'});
+  }
+
+  getDocument(id: number) : Observable<any>{
+    return this.http.get<any>(`${this.baseUrl}/${id}`);
+  }
+
 
 }
