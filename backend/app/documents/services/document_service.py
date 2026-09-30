@@ -68,7 +68,7 @@ class DocumentService:
                 document_file.uploaded_at = datetime.now(timezone.utc)
 
                 tag = Tag()
-                tag.owner_user_id = int(formData.get('user_id', 0))
+                tag.owner_user_id = int(formData.get('user_id', 1))
                 tag.color = 1
                 tag.name = 'Pruebas'
                 tag.created_at = datetime.now(timezone.utc)
@@ -79,7 +79,7 @@ class DocumentService:
                 document_tag = DocumentTag()
                 document_tag.tag_id = added_tag.id
                 document_tag.assigned_at = datetime.now(timezone.utc)
-                document_tag.assigned_by_user_id = int(formData.get('user_id', 0))
+                document_tag.assigned_by_user_id = int(formData.get('user_id', 1))
 
                 result = self.document_repository.add_document(document, document_file, document_tag)
 
@@ -107,6 +107,8 @@ class DocumentService:
             self.sql.rollback()
             raise
         except Exception as exc:
+            from flask import current_app
+            current_app.logger.error(exc)
             self.sql.rollback()
             raise DefaultError(
                 'DOCUMENT_ERROR',
@@ -120,8 +122,20 @@ class DocumentService:
                 args = {}
             pagination = int(args.get('pagination')) if args.get('pagination') else 0
             documents = self.document_repository.find(data=args, pagination=pagination)
-            return [x.to_dict() for x in documents]
+            return [
+                {
+                    **document,
+                    "updatedAt": (
+                        document["updatedAt"].isoformat()
+                        if document["updatedAt"]
+                        else None
+                    ),
+                }
+                for document in documents
+            ]
         except Exception as exc:
+            from flask import current_app
+            current_app.logger.error(exc)
             raise DefaultError(
                 'DOCUMENT_ERROR',
                 'No se lograron filtrar los documentos',

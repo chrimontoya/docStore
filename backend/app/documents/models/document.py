@@ -28,23 +28,23 @@ class Document(Base):
     def to_dict(self) -> dict:
         return {
             "id": self.id,
-            "owner_user_id": self.owner_user_id,
-            "folder_id": self.folder_id,
+            "ownerUserId": self.owner_user_id,
+            "folderId": self.folder_id,
             "title": self.title,
             "description": self.description,
-            "document_type": self.document_type,
+            "documentType": self.document_type,
             "status": self.status,
-            "created_at": (
+            "createdAt": (
                 self.created_at.isoformat()
                 if self.created_at
                 else None
             ),
-            "updated_at": (
+            "updatedAt": (
                 self.updated_at.isoformat()
                 if self.updated_at
                 else None
             ),
-            "deleted_at": (
+            "deletedAt": (
                 self.deleted_at.isoformat()
                 if self.deleted_at
                 else None

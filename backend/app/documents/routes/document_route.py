@@ -8,6 +8,7 @@ bp_document = Blueprint('documents', __name__, url_prefix='/documents')
 @bp_document.route("", methods=['POST'])
 def upload():
     document_service = DocumentService()
+    current_app.logger.debug(request.form)
     document_service.create(request.files, request.form)
 
     return "ok", 200

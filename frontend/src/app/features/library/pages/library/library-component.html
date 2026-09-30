@@ -1,0 +1,7 @@
+<h1>Biblioteca</h1>
+<p>Organiza y encuentra tus documentos.
+</p>
+
+<button mat-raised-button color="primary" (click)="openUploadDialog()">+ Cargar documento</button>
+
+<app-dynamic-table-component [dataSource]="dataSource" [config]="config"></app-dynamic-table-component>

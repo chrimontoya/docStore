@@ -10,4 +10,7 @@ class TagService:
         try:
             return self.tag_repository.add_tag(tag)
         except DefaultError:
-            raise DefaultError
+            raise DefaultError(
+                'TAG_ERROR',
+                'ERROR AL AGREGAR TAG'
+            )

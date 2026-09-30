@@ -29,14 +29,24 @@ class DocumentRepository:
             raise DefaultError('SQLERROR', str(e), 500)
 
     def find(self, data = None,pagination: int = 20):
-        query = (db.select(Document)
-                 .join(DocumentTag,DocumentTag.document_id == Document.id)
-                 .join(Tag,Tag.id == DocumentTag.tag_id)
-                 .join(DocumentFile, DocumentFile.document_id == Document.id)
-                 .where(Document.status==1)
+        data = data or {}
+        query = (db.select(
+            Document.id,
+            Document.title,
+            Document.description,
+            Document.updated_at.label("updatedAt"),
+            Tag.name.label("tagName"),
+            Folder.name.label("folderName"),
+        )
+         .join(DocumentTag,DocumentTag.document_id == Document.id)
+         .join(Tag,Tag.id == DocumentTag.tag_id)
+         .join(DocumentFile, DocumentFile.document_id == Document.id)
+         .outerjoin(Folder, Folder.id == Document.folder_id)
+         .where(Document.status==1)
         )
 
         if data.get('folder_id'):
+            query = query.join(Folder, Folder.id == Document.folder_id)
             query = query.where(Folder.id == int(data.get('folder_id')))
         if data.get('tag_id'):
             query = query.where(Tag.id == int(data.get('tag_id')))
@@ -52,13 +62,12 @@ class DocumentRepository:
                 Document.created_at < get_init_date(data.get('created_at')) + timedelta(days=1),
             )
 
-        session = db.session.execute(query).scalars()
+        session = db.session.execute(query).mappings()
 
         if pagination > 0:
             session = session.fetchmany(pagination)
 
-        documents = session
-        return documents
+        return [dict(row) for row in session]
 
     def get_document_detail(self, id: int):
         try:
