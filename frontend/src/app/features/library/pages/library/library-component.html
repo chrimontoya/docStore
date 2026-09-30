@@ -4,4 +4,18 @@
 
 <button mat-raised-button color="primary" (click)="openUploadDialog()">+ Cargar documento</button>
 
+<mat-form-field [appearance]="'outline'">
+  <input matInput [formControl]="searchControl" (keyup)="applyFilter($event)" placeholder="Buscar por nombre o título">
+</mat-form-field>
+
+<mat-form-field>
+  <mat-label>Todos los tipos</mat-label>
+  <select matNativeControl (change)="selectFormat($event)">
+    @for (option of formats; track option) {
+      <option [value]="option.value"
+              >{{ option.label }}</option>
+    }
+  </select>
+</mat-form-field>
+
 <app-dynamic-table-component [dataSource]="dataSource" [config]="config"></app-dynamic-table-component>

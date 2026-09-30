@@ -1,4 +1,4 @@
-<table mat-table [dataSource]="dataSource" class="mat-shadow-2">
+<table mat-table [dataSource]="dataSource" matSort class="mat-shadow-2">
 
   @for (column of config.columns; track column.id) {
 
@@ -7,6 +7,8 @@
       <th
         mat-header-cell
         *matHeaderCellDef
+        [mat-sort-header]="getSortId(column)"
+        [disabled]="!column.sortable"
         [style.width]="column.width"
         [style.text-align]="column.align">
 

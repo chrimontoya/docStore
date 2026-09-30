@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {DocumentService} from '../../services/document.service';
 import {
   MatTableDataSource,
@@ -10,12 +10,18 @@ import {UploadDocument} from '../../../../shared/components/upload-document/uplo
 import {TableConfig} from '../../../../shared/classes/table.class';
 import {LibraryColumns} from '../../../../shared/forms/library-columns';
 import {DynamicTableComponent} from '../../../../shared/components/dynamic-table/dynamic-table-component';
+import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
 
 @Component({
   imports: [
     MatTableModule,
     MatButton,
     DynamicTableComponent,
+    MatFormField,
+    MatInput,
+    ReactiveFormsModule,
+    MatLabel,
   ],
   selector: 'app-library-component',
   styleUrl: './library-component.scss',
@@ -25,6 +31,7 @@ export class LibraryComponent implements OnInit {
   documentsService: DocumentService = inject(DocumentService);
   documents: any[] = [];
   dataSource: MatTableDataSource<any> = new MatTableDataSource();
+  searchControl = new FormControl('');
   uploadDialogRef = inject(MatDialog);
   config: TableConfig<any> = {
     columns: LibraryColumns,
@@ -56,6 +63,47 @@ export class LibraryComponent implements OnInit {
     ],
   };
 
+  formats = [
+    {
+      value: '',
+      label: 'Todos los tipos',
+    },
+    {
+      value: '.jpg',
+      label: 'JPG',
+    },
+    {
+      value: '.txt',
+      label: 'TXT',
+    },
+    {
+      value: '.pdf',
+      label: 'PDF',
+    }
+  ];
+
+  formatSelected = signal(this.formats[0].value);
+  selectFormat(event: Event){
+    this.formatSelected.set((event.target as HTMLSelectElement).value);
+    this.applyFilter(event);
+  }
+
+  constructor() {
+    this.dataSource.filterPredicate = (row, filter) => {
+      const search = filter.toLowerCase();
+      const format = this.formatSelected();
+      const extension = String(row.extension ?? '').toLowerCase();
+      const originalFilename = String(row.originalFilename ?? '').toLowerCase();
+      const title = String(row.title ?? '').toLowerCase();
+
+      const matchesFormat = format === '' || extension === format;
+      const matchesSearch = !search ||
+        [extension, originalFilename, title].some(value => value.includes(search));
+
+      return matchesFormat && matchesSearch;
+    };
+  }
+
   ngOnInit() {
     this.documentsService.find().
       subscribe({
@@ -77,5 +125,10 @@ export class LibraryComponent implements OnInit {
           })
       }
     })
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 }

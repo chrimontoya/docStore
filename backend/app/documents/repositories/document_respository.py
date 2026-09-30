@@ -34,9 +34,13 @@ class DocumentRepository:
             Document.id,
             Document.title,
             Document.description,
+            Document.created_at.label("created_at"),
             Document.updated_at.label("updatedAt"),
             Tag.name.label("tagName"),
             Folder.name.label("folderName"),
+            DocumentFile.original_filename.label("originalFilename"),
+            DocumentFile.extension.label("extension"),
+            DocumentFile.size_bytes.label("sizeBytes"),
         )
          .join(DocumentTag,DocumentTag.document_id == Document.id)
          .join(Tag,Tag.id == DocumentTag.tag_id)

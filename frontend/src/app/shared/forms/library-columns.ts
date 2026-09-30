@@ -6,6 +6,7 @@ export const LibraryColumns: TableColumn<any>[] = [
     label: 'DOCUMENTO',
     field: 'title',
     type: 'text',
+    sortable: true,
   },
   {
     id: '2',
