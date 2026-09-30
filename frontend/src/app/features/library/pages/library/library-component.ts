@@ -28,6 +28,32 @@ export class LibraryComponent implements OnInit {
   uploadDialogRef = inject(MatDialog);
   config: TableConfig<any> = {
     columns: LibraryColumns,
+    actions: <any>[
+      {
+        id: '1',
+        label: 'Ver detalle',
+        icon: 'edit',
+        action: (row: any) => {
+
+        }
+      },
+      {
+        id: '2',
+        label: 'Descargar',
+        icon: 'download',
+        action: (row: any) => {
+
+        }
+      },
+      {
+        id: '3',
+        label: 'Borrar',
+        icon: 'trash',
+        action: (row: any) => {
+
+        }
+      },
+    ],
   };
 
   ngOnInit() {

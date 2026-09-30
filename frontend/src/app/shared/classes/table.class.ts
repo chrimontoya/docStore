@@ -1,3 +1,10 @@
+export interface TableAction<T> {
+  id: string;
+  label: string;
+  icon: string;
+  action: (row: T) => void;
+}
+
 export interface TableColumn<T> {
   id: string;
   label: string;
@@ -17,6 +24,8 @@ export interface TableColumn<T> {
 
 export interface TableConfig<T> {
   columns: TableColumn<T>[];
+
+  actions?: TableAction<T>[];
 
   selectable?: boolean;
 
