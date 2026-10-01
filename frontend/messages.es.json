@@ -25,6 +25,11 @@
     "login.accessProtected": "Acceso protegido.",
     "login.accessProtected2": "Tus documentos pertenecen únicamente a tu usuario autenticado.",
     "login.btnLogin": "Iniciar sesión",
-    "login.samePassword": "Las contraseñas no coinciden."
+    "login.samePassword": "Las contraseñas no coinciden.",
+    "library.title": "Biblioteca",
+    "library.description": "Organiza y encuentra tus documentos.",
+    "paper.title": "Papelera",
+    "paper.description": "Restaura documentos o elimínalos definitivamente.",
+    "paper.footer": "Los documentos en la papelera pueden restaurarse o eliminarse definitivamente."
   }
 }
