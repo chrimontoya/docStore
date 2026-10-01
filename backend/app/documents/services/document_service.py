@@ -220,3 +220,27 @@ class DocumentService:
             as_attachment=True,
             download_name=document_file.original_filename,
         )
+
+    def update_document(self, document):
+        try:
+            updated = self.document_repository.update_document(document)
+            if updated == 0:
+                raise DefaultError(
+                    'DOCUMENT_NOT_FOUND',
+                    'No se encontró el documento',
+                    404
+                )
+            self.sql.commit()
+            return True
+        except DefaultError:
+            self.sql.rollback()
+            raise
+        except Exception as exc:
+            from flask import current_app
+            current_app.logger.error(exc)
+            self.sql.rollback()
+            raise DefaultError(
+                'DOCUMENT_ERROR',
+                'No se pudo mover a la papelera el documento',
+                500
+            ) from exc

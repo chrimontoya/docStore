@@ -30,5 +30,19 @@ export class DocumentService {
     return this.http.get<any>(`${this.baseUrl}/${id}`);
   }
 
+  downloadFile(blob: Blob, fileName: string): void {
+    const url = URL.createObjectURL(blob);
+
+    const enlace = document.createElement('a');
+    enlace.href = url;
+    enlace.download = fileName;
+    enlace.click();
+    URL.revokeObjectURL(url);
+  }
+
+  moveToTrash(id: number): Observable<any>{
+    return this.http.patch<any>(`${this.baseUrl}/${id}/disable`, {});
+  }
+
 
 }

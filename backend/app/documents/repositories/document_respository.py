@@ -113,3 +113,15 @@ class DocumentRepository:
         except Exception as e:
             db.session.rollback()
             raise DefaultError('SQLERROR', str(e), 500)
+
+    def update_document(self, document):
+        try:
+            result = db.session.execute(
+                db.update(Document)
+                    .where(Document.id == int(document))
+                    .values(status=0)
+            )
+            return result.rowcount
+        except Exception as e:
+            db.session.rollback()
+            raise DefaultError('SQLERROR', str(e), 500)

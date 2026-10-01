@@ -51,17 +51,13 @@ export class LibraryComponent implements OnInit {
         id: '2',
         label: 'Descargar',
         icon: 'download',
-        action: (row: any) => {
-
-        }
+        action: (row: any) => this.download(row),
       },
       {
         id: '3',
         label: 'Borrar',
         icon: 'trash',
-        action: (row: any) => {
-
-        }
+        action: (row: any) => this.delete(row),
       },
     ],
   };
@@ -168,5 +164,23 @@ export class LibraryComponent implements OnInit {
           ] as Action<Document>[]
         }
       })
+  }
+
+  download(document: Document) {
+    this.documentsService.getDocumentContent(document.id)
+      .subscribe((res) => {
+        if (res){
+          this.documentsService.downloadFile(res, document.originalFilename);
+        }
+      })
+  }
+
+  delete(document: Document) {
+    this.documentsService.moveToTrash(document.id)
+      .subscribe((res) => {
+          if (res){
+
+          }
+      });
   }
 }

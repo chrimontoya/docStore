@@ -30,3 +30,9 @@ def get(id: int = 0):
 def get_content(id: int = 0):
     document_service = DocumentService()
     return document_service.get_content_file(int(id)), 200
+
+@bp_document.route("/<id>/disable", methods=['PATCH'])
+def update(id: int = 0):
+    document_service = DocumentService()
+    document_service.update_document(int(id))
+    return {"message": "Documento movido a la papelera"}, 200
