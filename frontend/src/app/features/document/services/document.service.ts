@@ -1,15 +1,20 @@
 import {inject, Service} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../../environments/environment.es';
 import {Observable} from 'rxjs';
+import {DOCUMENT_STATUS, DocumentStatus} from '../../../core/constants/document-status.const';
 
 @Service()
 export class DocumentService {
   http: HttpClient = inject(HttpClient);
   baseUrl: string = `${environment.apiUrl}/documents`;
 
-  find(): Observable<any>{
-    return this.http.get<any>(`${this.baseUrl}`);
+  find(status?: string): Observable<any>{
+    let params = new HttpParams();
+    if (status) {
+      params = params.set('status', status);
+    }
+    return this.http.get<any>(`${this.baseUrl}`, {params: params});
   }
 
   uploadFiles(files: any[], metadata?: any): Observable<any>{
@@ -40,9 +45,14 @@ export class DocumentService {
     URL.revokeObjectURL(url);
   }
 
-  moveToTrash(id: number): Observable<any>{
-    return this.http.patch<any>(`${this.baseUrl}/${id}/disable`, {});
+  setStatusDocument(id: number, status: DocumentStatus): Observable<any>{
+    return this.http.patch<any>(`${this.baseUrl}/${id}/disable`, {status});
   }
+
+  deleteDocument(id: number): Observable<any>{
+    return this.http.delete<any>(`${this.baseUrl}/${id}`);
+  }
+
 
 
 }

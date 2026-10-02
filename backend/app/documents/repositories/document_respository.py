@@ -43,11 +43,11 @@ class DocumentRepository:
             DocumentFile.size_bytes.label("sizeBytes"),
             DocumentFile.mime_type.label("mimeType"),
         )
-         .join(DocumentTag,DocumentTag.document_id == Document.id)
-         .join(Tag,Tag.id == DocumentTag.tag_id)
-         .join(DocumentFile, DocumentFile.document_id == Document.id)
+        .join(DocumentFile, DocumentFile.document_id == Document.id)
+         .outerjoin(DocumentTag,DocumentTag.document_id == Document.id)
+         .outerjoin(Tag,Tag.id == DocumentTag.tag_id)
          .outerjoin(Folder, Folder.id == Document.folder_id)
-         .where(Document.status==1)
+         .where(Document.status==data.get("status"))
         )
 
         if data.get('folder_id'):
@@ -114,14 +114,38 @@ class DocumentRepository:
             db.session.rollback()
             raise DefaultError('SQLERROR', str(e), 500)
 
-    def update_document(self, document):
+    def update_document(self, id, document_status):
         try:
             result = db.session.execute(
                 db.update(Document)
-                    .where(Document.id == int(document))
-                    .values(status=0)
+                    .where(Document.id == id)
+                    .values(status=document_status)
             )
             return result.rowcount
+        except Exception as e:
+            db.session.rollback()
+            raise DefaultError('SQLERROR', str(e), 500)
+
+    def delete_document(self, id: int):
+        try:
+            document = db.session.get(Document, id)
+            if document is None:
+                return 0
+            db.session.delete(document)
+            # # Delete dependent rows before the document to satisfy foreign keys.
+            # db.session.execute(
+            #     db.delete(Activity).where(Activity.document_id == id)
+            # )
+            # db.session.execute(
+            #     db.delete(DocumentFile).where(DocumentFile.document_id == id)
+            # )
+            # db.session.execute(
+            #     db.delete(DocumentTag).where(DocumentTag.document_id == id)
+            # )
+            # result = db.session.execute(
+            #     db.delete(Document).where(Document.id == id)
+            # )
+            return 1
         except Exception as e:
             db.session.rollback()
             raise DefaultError('SQLERROR', str(e), 500)

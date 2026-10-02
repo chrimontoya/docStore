@@ -1,6 +1,6 @@
 from datetime import datetime
 from sqlalchemy import ForeignKey, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from ...config import Base
 
 class Activity(Base):
@@ -12,3 +12,4 @@ class Activity(Base):
     action: Mapped[int] = mapped_column(nullable=False)
     details: Mapped[str] = mapped_column(String())
     occurred_at: Mapped[datetime] = mapped_column()
+    document = relationship("Document", back_populates="activities")

@@ -16,6 +16,8 @@ def upload():
 @bp_document.route("", methods=['GET'])
 def get_all():
     document_service = DocumentService()
+    from flask import current_app
+    current_app.logger.debug(request.args)
     return document_service.find(request.args), 200
 
 @bp_document.route("/<id>", methods=['GET'])
@@ -33,6 +35,20 @@ def get_content(id: int = 0):
 
 @bp_document.route("/<id>/disable", methods=['PATCH'])
 def update(id: int = 0):
+    data = request.get_json()
+    if not data or not data.get("status"):
+        return "error", 400
+
     document_service = DocumentService()
-    document_service.update_document(int(id))
-    return {"message": "Documento movido a la papelera"}, 200
+    document_service.update_document(int(id), data.get("status"))
+    message = "Documento movido a la papelera"
+
+    if data.get("status") == 'ACTIVE':
+        message = "Documento restaurado"
+    return {"message": message}, 200
+
+@bp_document.route("/<id>", methods=['DELETE'])
+def delete(id: int):
+    document_service = DocumentService()
+    result = document_service.delete_document(int(id))
+    return {"message": "Documento eliminado completamente"}, 200

@@ -122,7 +122,9 @@ class DocumentService:
             if args is None:
                 args = {}
             pagination = int(args.get('pagination')) if args.get('pagination') else 0
-            documents = self.document_repository.find(data=args, pagination=pagination)
+            params = {**args}
+            params.update({'status': 1 if args.get('status') == 'ACTIVE' else 0})
+            documents = self.document_repository.find(data=params, pagination=pagination)
             return [
                 {
                     **document,
@@ -151,6 +153,8 @@ class DocumentService:
     def get_document_detail(self, id: int):
         try:
             document = self.document_repository.get_document_detail(id)
+            from flask import current_app
+            current_app.logger.debug(document)
             if not document:
                 return None
             keys = [
@@ -170,6 +174,12 @@ class DocumentService:
             for k in keys:
                 document_detail.update({k: document[0].get(k)})
             return document_detail
+        except DefaultError:
+            raise DefaultError(
+                'DOCUMENT_ERROR',
+                'No se obtuvo el documento',
+                400
+            )
         except Exception as exc:
             raise DefaultError(
                 'DOCUMENT_ERROR',
@@ -221,9 +231,14 @@ class DocumentService:
             download_name=document_file.original_filename,
         )
 
-    def update_document(self, document):
+    def update_document(self, id, status):
         try:
-            updated = self.document_repository.update_document(document)
+            document_status = 0
+            if status == 'TRASH':
+                document_status = 0
+            if status == 'ACTIVE':
+                document_status = 1
+            updated = self.document_repository.update_document(id, document_status)
             if updated == 0:
                 raise DefaultError(
                     'DOCUMENT_NOT_FOUND',
@@ -242,5 +257,18 @@ class DocumentService:
             raise DefaultError(
                 'DOCUMENT_ERROR',
                 'No se pudo mover a la papelera el documento',
+                500
+            ) from exc
+
+    def delete_document(self, id: int):
+        try:
+            result = self.document_repository.delete_document(id)
+            self.sql.commit()
+            return result
+        except DefaultError as exc:
+            self.sql.rollback()
+            raise DefaultError(
+                'DOCUMENT_ERROR',
+                f'No se pudo eliminar el documento: {str(exc)}',
                 500
             ) from exc

@@ -10,6 +10,8 @@ import {TableAction, TableConfig} from '../../../shared/classes/table.class';
 import {LibraryColumns} from '../../../shared/forms/library-columns';
 import {DynamicDialogComponent} from '../../../shared/components/dynamic-dialog/dynamic-dialog-component';
 import {Action} from '../../../shared/classes/action.interface';
+import {DOCUMENT_STATUS} from '../../../core/constants/document-status.const';
+import {DOCUMENT_CONTEXT} from '../../../core/constants/document-context.const';
 
 type DocumentContext = 'library' | 'trash';
 
@@ -27,7 +29,7 @@ type DocumentContext = 'library' | 'trash';
   templateUrl: './document-table-component.html',
 })
 export class DocumentTableComponent {
-  @Input() moduleId: DocumentContext = 'library';
+  @Input() documentContext: DocumentContext = 'library';
   @ViewChild('documentViewTemplate')
   documentViewTemplate!: TemplateRef<{ $implicit: Document }>;
   documentsService: DocumentService = inject(DocumentService);
@@ -43,19 +45,19 @@ export class DocumentTableComponent {
         id: '1',
         label: 'Ver detalle',
         icon: 'remove_red_eye',
-        action: (row: any) => this.viewDetail(row),
+        action: (row: Document) => this.viewDetail(row),
       },
       {
         id: '2',
         label: 'Descargar',
         icon: 'download',
-        action: (row: any) => this.download(row),
+        action: (row: Document) => this.download(row),
       },
       {
         id: '3',
         label: 'Borrar',
         icon: 'delete',
-        action: (row: any) => this.delete(row),
+        action: (row: Document) => this.restoreDocument(row),
       },
     ],
     trash: [
@@ -63,15 +65,13 @@ export class DocumentTableComponent {
         id: '1',
         label: 'Restaurar',
         icon: 'restore_from_trash',
-        action: (row: any) => {
-        },
+        action: (row: Document) => this.restoreDocument(row),
       },
       {
         id: '2',
         label: 'Eliminar definitivamente',
         icon: 'delete',
-        action: (row: any) => {
-        },
+        action: (row: Document) => this.delete(row),
       },
     ],
   }
@@ -84,7 +84,7 @@ export class DocumentTableComponent {
   }
 
   get actionsModule(): TableAction<Document>[] {
-    return this.actionsConfig[this.moduleId];
+    return this.actionsConfig[this.documentContext];
   }
 
   get formats() {
@@ -108,6 +108,10 @@ export class DocumentTableComponent {
     ];
   }
 
+  get status() {
+    return this.documentContext == DOCUMENT_CONTEXT.LIBRARY ? DOCUMENT_STATUS.ACTIVE : DOCUMENT_STATUS.TRASH;
+  }
+
   constructor() {
     this.dataSource.filterPredicate = (row, filter) => {
       const search = filter.toLowerCase();
@@ -125,7 +129,7 @@ export class DocumentTableComponent {
   }
 
   ngOnInit() {
-    this.documentsService.find().subscribe({
+    this.documentsService.find(this.status).subscribe({
       next: (res) => {
         this.dataSource.data = res;
       }
@@ -185,8 +189,18 @@ export class DocumentTableComponent {
       })
   }
 
+  restoreDocument(document: Document) {
+
+    this.documentsService.setStatusDocument(document.id, this.documentContext === DOCUMENT_CONTEXT.TRASH ? DOCUMENT_STATUS.ACTIVE : DOCUMENT_STATUS.TRASH)
+      .subscribe((res) => {
+        if (res) {
+
+        }
+      });
+  }
+
   delete(document: Document) {
-    this.documentsService.moveToTrash(document.id)
+    this.documentsService.deleteDocument(document.id)
       .subscribe((res) => {
         if (res) {
 

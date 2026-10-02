@@ -1,4 +1,5 @@
 from typing import List
+from unittest import case
 
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import mapped_column, Mapped, relationship
@@ -22,7 +23,21 @@ class Document(Base):
     deleted_at: Mapped[datetime] = mapped_column(nullable=True)
     document_tags = relationship(
         DocumentTag,
-        back_populates='document'
+        back_populates="document",
+        cascade="all, delete-orphan",
+    )
+
+    document_file = relationship(
+        "DocumentFile",
+        back_populates="document",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )
+
+    activities = relationship(
+        "Activity",
+        back_populates="document",
+        cascade="all, delete-orphan",
     )
 
     def to_dict(self) -> dict:

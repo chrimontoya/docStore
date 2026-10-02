@@ -1,5 +1,5 @@
 from sqlalchemy import ForeignKey, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 from ...config import Base
 
@@ -14,4 +14,5 @@ class DocumentFile(Base):
     size_bytes: Mapped[int] = mapped_column(nullable=False)
     checksum: Mapped[str] = mapped_column(String(300), nullable=False)
     uploaded_at: Mapped[datetime] = mapped_column(nullable=False)
+    document = relationship("Document", back_populates="document_file")
 
