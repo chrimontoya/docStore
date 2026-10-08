@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, TemplateRef, ViewChild} from '@angular/core';
 import {MatTableModule} from '@angular/material/table';
 import {MatButton, MatIconButton} from '@angular/material/button';
-import {MatDialog} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {UploadDocument} from '../../../../shared/components/upload-document/upload-document';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {DocumentTableComponent} from '../../../document/components/document-table-component';
@@ -14,8 +14,9 @@ import {MatIcon} from '@angular/material/icon';
 import {TAG_COLORS} from '../../../../core/constants/tag-colors.const';
 import {TagChipComponent} from '../../../../shared/components/tag-chip/tag-chip-component';
 import {MatRadioButton, MatRadioGroup} from '@angular/material/radio';
-import {ColorPickerComponent} from '../../../../shared/components/./color-picker/color-picker-component';
+import {ColorPickerComponent} from '../../../../shared/components/color-picker/color-picker-component';
 import {Color} from '../../../../core/models/color.model';
+import {TagCreatorRequest} from '../../../../core/models/tag-creator.model';
 
 @Component({
   imports: [
@@ -47,7 +48,7 @@ export class LibraryComponent {
   tags: Tag[] = [];
   nameTagControl = new FormControl();
 
-  get colors(){
+  get colors() {
     return TAG_COLORS.map(color => new Color(color.id, color.name, color.color));
   }
 
@@ -83,9 +84,7 @@ export class LibraryComponent {
           },
           {
             label: 'Guardar',
-            action: () => {
-
-            }
+            action: () => this.createTags(ref),
           }
         ],
       },
@@ -96,7 +95,7 @@ export class LibraryComponent {
 
   addTag(): void {
     if (this.nameTagControl.valid && this.nameTagControl.value) {
-      this.tags.push(new Tag((this.tags.length + 1), this.nameTagControl.value, this.colors[0].color));
+      this.tags.push(new Tag((this.tags.length + 1), this.nameTagControl.value, this.colors[0].id));
       this.nameTagControl.setValue('');
     }
   }
@@ -110,13 +109,27 @@ export class LibraryComponent {
 
     this.tags = this.tags.map((tag) =>
       tag.idTag === tagId
-        ? new Tag(tag.idTag, tag.tagName, color.color)
+        ? new Tag(tag.idTag, tag.tagName, color.id)
         : tag
     );
-    console.log('mount');
   }
 
-  deleteTag(tag: Tag){
+  deleteTag(tag: Tag) {
     this.tags.splice(this.tags.indexOf(tag), 1);
+  }
+
+  createTags(ref: MatDialogRef<DynamicDialogComponent<unknown>>) {
+    if (!this.tags.length) return;
+
+    this.documentsService.postCreateTag(
+      this.tags.map(tag =>
+        new TagCreatorRequest(1, tag.tagName, tag.tagColor)
+      ))
+      .subscribe(({
+        next: (res) => {
+          console.log(res);
+          ref.close();
+        }
+      }));
   }
 }

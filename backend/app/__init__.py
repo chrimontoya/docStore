@@ -5,12 +5,14 @@ from sqlalchemy import text
 from flask_jwt_extended import JWTManager
 from .auth.routes.auth_route import bp_auth
 from .documents.routes.document_route import bp_document
+from .tags.routes.tag_route import bp_tag
 from .error_handlers import register_error_handlers
 def create_app():
     app = Flask(__name__)
     CORS(app)
     app.register_blueprint(bp_auth)
     app.register_blueprint(bp_document)
+    app.register_blueprint(bp_tag)
     app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
     jwt = JWTManager(app)
 

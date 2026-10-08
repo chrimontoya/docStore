@@ -1,12 +1,12 @@
 export class Tag {
   private readonly id: number;
   private name: string;
-  private color: string;
+  private colorId: number;
 
-  constructor(id: number, name: string, color: string = "") {
+  constructor(id: number, name: string, color: number = 0) {
     this.id = id;
     this.name = name;
-    this.color = color;
+    this.colorId = color;
   }
 
   get idTag(): number {
@@ -21,11 +21,11 @@ export class Tag {
     this.name = name;
   }
 
-  get tagColor(): string {
-    return this.color;
+  get tagColor(): number {
+    return this.colorId;
   }
 
-  set tagColor(color: string) {
-    this.color = color;
+  set tagColor(color: number) {
+    this.colorId = color;
   }
 }

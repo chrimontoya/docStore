@@ -13,3 +13,12 @@ class TagRepository:
         except Exception as e:
             db.session.rollback()
             raise DefaultError('SQLERROR', str(e), 500)
+
+    def add_tags(self, tags):
+        try:
+            db.session.add_all(tags)
+            db.session.commit()
+            return tags
+        except Exception as e:
+            db.session.rollback()
+            raise DefaultError('SQLERROR', str(e), 500)

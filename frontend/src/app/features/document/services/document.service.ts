@@ -3,11 +3,13 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../../environments/environment.es';
 import {Observable} from 'rxjs';
 import {DOCUMENT_STATUS, DocumentStatus} from '../../../core/constants/document-status.const';
+import {TagCreatorRequest} from '../../../core/models/tag-creator.model';
 
 @Service()
 export class DocumentService {
   http: HttpClient = inject(HttpClient);
   baseUrl: string = `${environment.apiUrl}/documents`;
+  baseUrlTag: string = `${environment.apiUrl}/tags`;
 
   find(status?: string): Observable<any>{
     let params = new HttpParams();
@@ -53,6 +55,8 @@ export class DocumentService {
     return this.http.delete<any>(`${this.baseUrl}/${id}`);
   }
 
-
+  postCreateTag(tags: TagCreatorRequest[]): Observable<any>{
+    return this.http.post<any>(`${this.baseUrlTag}`, tags);
+  }
 
 }
