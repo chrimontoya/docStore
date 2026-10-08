@@ -3,4 +3,40 @@
 
 <button mat-raised-button color="primary" (click)="openUploadDialog()">+ Cargar documento</button>
 
+<button mat-raised-button color="secondary" (click)="openTagCreatorDialog()">Administrar etiquetas</button>
+
 <app-document-table-component [documentContext]="'library'"></app-document-table-component>
+
+
+<ng-template #tagCreator>
+  <p>Crea y organiza tus etiquetas. Luego podrás asociarlas a uno o varios documentos.</p>
+  <mat-form-field [appearance]="'outline'" class="w-100">
+    <mat-label>Nombre etiqueta</mat-label>
+    <input matInput [formControl]="nameTagControl" [placeholder]="'ej: Importante'" [maxLength]="12">
+  </mat-form-field>
+
+  <button mat-raised-button class="w-100" (click)="addTag()">Crear etiqueta</button>
+
+  <h5>Tus etiquetas</h5>
+
+  @if (!tags) {
+    <p>Todavía no tienes etiquetas.</p>
+  }
+
+    <section class="w-100">
+      @for (tag of tags; track tag.idTag) {
+        <div class="w-100 d-flex-row justify-content-between">
+          <app-tag-chip-component [tag]="tag"></app-tag-chip-component>
+
+          <div class="d-flex-row">
+            <app-color-picker-component [colors]="colors" (colorChange)="selectTagColor(tag.idTag, $event.id)"></app-color-picker-component>
+
+            <button matIconButton (click)="deleteTag(tag)">
+              <mat-icon color="warn">delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      }
+    </section>
+
+</ng-template>

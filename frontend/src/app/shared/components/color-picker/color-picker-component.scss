@@ -1,0 +1,23 @@
+.color-picker {
+  display: grid;
+  grid-template-columns: repeat(4, 40px);
+  gap: 5px;
+  padding: 8px;
+  border-radius: 12px;
+}
+
+.color-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.icon-selected {
+  font-size: 16px;
+  align-content: center;
+  color: white;
+}
+
+.title-picker {
+  padding-left: 12px;
+}

@@ -1,0 +1,28 @@
+@if (!disabled) {
+  <button matIconButton [matMenuTriggerFor]="menuColor">
+
+    <div class="color-btn" [style.background-color]="colorSelected">
+    </div>
+
+  </button>
+
+  <mat-menu #menuColor="matMenu">
+    <label class="title-picker">Elegir color</label>
+    <div class="color-picker">
+      @for (color of colors; track color.id) {
+        <button matIconButton (click)="onChangeColor(color)">
+
+          <div class="color-btn" [style.background-color]="color.color">
+            @if (color.color == colorSelected) {
+              <mat-icon class="icon-selected">done</mat-icon>
+            }
+          </div>
+
+        </button>
+      }
+    </div>
+  </mat-menu>
+} @else {
+  <div class="color-btn" [style.background-color]="colorSelected">
+  </div>
+}
