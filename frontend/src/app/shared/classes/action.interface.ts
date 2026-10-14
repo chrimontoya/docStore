@@ -3,6 +3,6 @@ export interface Action<T> {
   label: string;
   color?: 'primary' | 'accent' | 'warn';
   icon?: string;
-  disabled?: (data: T) => boolean;
+  disabled?: boolean;
   action: (data: T) => void;
 }

@@ -31,7 +31,7 @@
           <div class="d-flex-row">
             <app-color-picker-component [colors]="colors" [colorSelected]="tag.tagColor" (colorChange)="selectTagColor(tag.idTag, $event.id)"></app-color-picker-component>
 
-            <button matIconButton (click)="deleteTag(tag)">
+            <button matIconButton (click)="deleteTag(tag)" [disabled]="!tag.idTag">
               <mat-icon color="warn">delete</mat-icon>
             </button>
           </div>

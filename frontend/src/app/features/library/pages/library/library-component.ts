@@ -48,7 +48,7 @@ import {TagCreatorRequest} from '../../../../core/models/tag-creator.model';
   styleUrl: './library-component.scss',
   templateUrl: './library-component.html',
 })
-export class LibraryComponent implements OnInit{
+export class LibraryComponent implements OnInit {
   @ViewChild("tagCreator")
   tagCreator!: TemplateRef<any>;
   dialogRef = inject(MatDialog);
@@ -107,7 +107,7 @@ export class LibraryComponent implements OnInit{
 
   addTag(): void {
     if (this.nameTagControl.valid && this.nameTagControl.value) {
-      this.tags.push(new Tag((this.tags.length + 1), this.nameTagControl.value, this.colors[0].id));
+      this.tags.push(new Tag(0, this.nameTagControl.value, this.colors[0].id));
       this.nameTagControl.setValue('');
     }
   }
@@ -144,25 +144,28 @@ export class LibraryComponent implements OnInit{
   }
 
   createTags(ref: MatDialogRef<DynamicDialogComponent<unknown>>) {
-    if (!this.tags.length) return;
+    const tags = this.tags.filter(tag => tag.idTag === 0);
+
+    if (!tags.length) return;
 
     this.documentsService.postCreateTag(
-      this.tags.map(tag =>
+      tags.map(tag =>
         new TagCreatorRequest(1, tag.tagName, tag.tagColor)
       ))
       .subscribe(({
         next: (res) => {
           ref.close();
+          this.getTags();
         }
       }));
   }
 
-  getTags(){
-    this.documentsService.getTags().
-    subscribe(({
+  getTags() {
+    this.documentsService.getTags().subscribe(({
       next: (res: any) => {
         this.tags = res.map((tag: any) => new Tag(tag.id, tag.name, tag.colorId));
       }
     }));
   }
+
 }
