@@ -17,3 +17,9 @@ def get_all():
     tag_service = TagService()
     tags = tag_service.get_all()
     return tags, 200
+
+@bp_tag.route("/<id>", methods=["DELETE"])
+def delete(id):
+    tag_service = TagService()
+    res = tag_service.delete(id)
+    return res, 200

@@ -65,14 +65,8 @@ export class LibraryComponent implements OnInit{
   }
 
   ngOnInit(): void {
-      this.documentsService.getTags().
-        subscribe(({
-        next: (res: any) => {
-          this.tags = res.map((tag: any) => new Tag(tag.id, tag.name, tag.colorId));
-          console.log(this.tags);
-        }
-      }))
-    }
+    this.getTags();
+  }
 
   openUploadDialog(): void {
     const ref = this.dialogRef.open(UploadDocument);
@@ -132,8 +126,21 @@ export class LibraryComponent implements OnInit{
     );
   }
 
-  deleteTag(tag: Tag) {
-    this.tags.splice(this.tags.indexOf(tag), 1);
+  deleteTag(tag: Tag): void {
+    const tagId = tag.idTag;
+
+    this.documentsService.deleteTag(tagId).subscribe({
+      next: () => {
+        this.tags = this.tags.filter(
+          currentTag => currentTag.idTag !== tagId
+        );
+
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error al eliminar la etiqueta:', err);
+      }
+    });
   }
 
   createTags(ref: MatDialogRef<DynamicDialogComponent<unknown>>) {
@@ -145,9 +152,17 @@ export class LibraryComponent implements OnInit{
       ))
       .subscribe(({
         next: (res) => {
-          console.log(res);
           ref.close();
         }
       }));
+  }
+
+  getTags(){
+    this.documentsService.getTags().
+    subscribe(({
+      next: (res: any) => {
+        this.tags = res.map((tag: any) => new Tag(tag.id, tag.name, tag.colorId));
+      }
+    }));
   }
 }

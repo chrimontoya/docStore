@@ -30,3 +30,18 @@ class TagRepository:
             return tags
         except DefaultError as e:
             raise DefaultError('SQLERROR', str(e), 500)
+
+    def delete(self, id):
+        try:
+            tag = db.session.get(Tag, id)
+
+            if not tag:
+                raise DefaultError('SQLERROR', str(tag), 500)
+
+            db.session.delete(tag)
+            db.session.commit()
+            return tag
+        except Exception as e:
+            db.session.rollback()
+            raise DefaultError('SQLERROR', str(e), 500)
+

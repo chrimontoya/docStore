@@ -44,3 +44,9 @@ class TagService:
             return tags
         except DefaultError:
             raise DefaultError('TAG_ERROR', 'ERROR AL OBTENER TAGS', 500)
+
+    def delete(self, id):
+        try:
+            return self.tag_repository.delete(id).to_dict()
+        except DefaultError:
+            raise DefaultError('TAG_ERROR', 'ERROR AL BORRAR TAG', 500)

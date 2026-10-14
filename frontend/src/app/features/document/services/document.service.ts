@@ -63,4 +63,8 @@ export class DocumentService {
     return this.http.get<any>(`${this.baseUrlTag}`);
   }
 
+  deleteTag(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrlTag}/${id}`);
+  }
+
 }
