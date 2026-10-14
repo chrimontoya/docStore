@@ -1,7 +1,7 @@
 @if (!disabled) {
   <button matIconButton [matMenuTriggerFor]="menuColor">
 
-    <div class="color-btn" [style.background-color]="colorSelected">
+    <div class="color-btn" [style.background-color]="currentColor">
     </div>
 
   </button>
@@ -13,7 +13,7 @@
         <button matIconButton (click)="onChangeColor(color)">
 
           <div class="color-btn" [style.background-color]="color.color">
-            @if (color.color == colorSelected) {
+            @if (color.id == colorSelected) {
               <mat-icon class="icon-selected">done</mat-icon>
             }
           </div>

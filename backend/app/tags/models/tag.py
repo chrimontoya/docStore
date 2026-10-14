@@ -24,7 +24,7 @@ class Tag(Base):
             "id": self.id,
             "ownerUserId": self.owner_user_id,
             "name": self.name,
-            "color": self.color,
-            "created_at": self.created_at,
+            "colorId": self.color,
+            "createdAt": self.created_at,
             "deletedAt": self.deleted_at,
         }

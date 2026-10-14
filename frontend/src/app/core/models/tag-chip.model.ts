@@ -1,9 +1,11 @@
 import {Tag} from './tag.model';
 
 export class TagChip {
-  title: string = 'None';
-  color: string = 'black';
+  title: string;
+  color: string;
 
-  constructor() {
+  constructor(title: string = '', color: string = '') {
+    this.title = title;
+    this.color = color;
   }
 }

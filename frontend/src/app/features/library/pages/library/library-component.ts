@@ -1,4 +1,12 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, TemplateRef, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 import {MatTableModule} from '@angular/material/table';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
@@ -40,7 +48,7 @@ import {TagCreatorRequest} from '../../../../core/models/tag-creator.model';
   styleUrl: './library-component.scss',
   templateUrl: './library-component.html',
 })
-export class LibraryComponent {
+export class LibraryComponent implements OnInit{
   @ViewChild("tagCreator")
   tagCreator!: TemplateRef<any>;
   dialogRef = inject(MatDialog);
@@ -55,6 +63,16 @@ export class LibraryComponent {
   constructor(private cdr: ChangeDetectorRef) {
 
   }
+
+  ngOnInit(): void {
+      this.documentsService.getTags().
+        subscribe(({
+        next: (res: any) => {
+          this.tags = res.map((tag: any) => new Tag(tag.id, tag.name, tag.colorId));
+          console.log(this.tags);
+        }
+      }))
+    }
 
   openUploadDialog(): void {
     const ref = this.dialogRef.open(UploadDocument);

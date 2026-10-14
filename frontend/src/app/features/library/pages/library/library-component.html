@@ -19,7 +19,7 @@
 
   <h5>Tus etiquetas</h5>
 
-  @if (!tags) {
+  @if (!tags.length) {
     <p>Todavía no tienes etiquetas.</p>
   }
 
@@ -29,7 +29,7 @@
           <app-tag-chip-component [tag]="tag"></app-tag-chip-component>
 
           <div class="d-flex-row">
-            <app-color-picker-component [colors]="colors" (colorChange)="selectTagColor(tag.idTag, $event.id)"></app-color-picker-component>
+            <app-color-picker-component [colors]="colors" [colorSelected]="tag.tagColor" (colorChange)="selectTagColor(tag.idTag, $event.id)"></app-color-picker-component>
 
             <button matIconButton (click)="deleteTag(tag)">
               <mat-icon color="warn">delete</mat-icon>

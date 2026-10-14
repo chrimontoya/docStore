@@ -1,3 +1,4 @@
+from ..models.tag import Tag
 from ...config import db
 from ...exceptions import DefaultError
 class TagRepository:
@@ -21,4 +22,11 @@ class TagRepository:
             return tags
         except Exception as e:
             db.session.rollback()
+            raise DefaultError('SQLERROR', str(e), 500)
+
+    def get_all(self):
+        try:
+            tags = db.session.query(Tag).all()
+            return tags
+        except DefaultError as e:
             raise DefaultError('SQLERROR', str(e), 500)

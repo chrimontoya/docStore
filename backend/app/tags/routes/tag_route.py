@@ -11,3 +11,9 @@ def create_tag():
     if not res:
         return "error", 400
     return [tag.to_dict() for tag in res], 200
+
+@bp_tag.route("/", methods=["GET"])
+def get_all():
+    tag_service = TagService()
+    tags = tag_service.get_all()
+    return tags, 200

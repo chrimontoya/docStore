@@ -37,3 +37,10 @@ class TagService:
                 'TAG_ERROR',
                 'ERROR AL AGREGAR TAG'
             )
+
+    def get_all(self):
+        try:
+            tags = [tag.to_dict() for tag in self.tag_repository.get_all()]
+            return tags
+        except DefaultError:
+            raise DefaultError('TAG_ERROR', 'ERROR AL OBTENER TAGS', 500)

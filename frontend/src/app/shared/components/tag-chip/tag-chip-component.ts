@@ -16,9 +16,11 @@ export class TagChipComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['tag'] != undefined) {
-      const {tagName, tagColor} = changes['tag'].currentValue as Tag;
-      this.tagChip.title = tagName;
-      this.tagChip.color = this.colorById(tagColor).color;
+      const {idTag, tagColor, tagName} = changes['tag'].currentValue as Tag;
+      if (idTag != undefined) {
+        this.tagChip = new TagChip(tagName, this.colorById(tagColor).color);
+        console.log(this.tagChip, tagColor)
+      }
     }
   }
 

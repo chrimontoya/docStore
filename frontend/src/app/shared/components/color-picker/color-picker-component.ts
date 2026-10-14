@@ -1,40 +1,38 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Color} from '../../../core/models/color.model';
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
-import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
+import {MatMenu, MatMenuTrigger} from '@angular/material/menu';
+import {TAG_COLORS} from '../../../core/constants/tag-colors.const';
 
 @Component({
   imports: [
     MatIcon,
     MatIconButton,
     MatMenu,
-    MatMenuItem,
     MatMenuTrigger
   ],
   selector: 'app-color-picker-component',
   styleUrl: './color-picker-component.scss',
   templateUrl: './color-picker-component.html',
 })
-export class ColorPickerComponent implements OnChanges {
+export class ColorPickerComponent {
   @Input() colors: Color[] = [];
   @Input() disabled: boolean = false;
+  @Input() colorSelected: number = 1;
   @Output() colorChange: EventEmitter<Color> = new EventEmitter();
-  colorSelected: string = '';
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['colors'] != undefined){
-      const [first] = changes['colors'].currentValue as Color[];
-      if (!this.colorSelected){
-        this.colorSelected = first.color;
-        this.colorChange.emit(first);
-      }
-    }
+  get currentColor(): string {
+    return this.colorById(this.colorSelected).color;
   }
 
-  onChangeColor(color: Color){
-    this.colorSelected = color.color;
+  onChangeColor(color: Color) {
+    this.colorSelected = color.id;
     this.colorChange.emit(color);
+  }
+
+  colorById(colorId: number): Color {
+    return TAG_COLORS.find((color) => color.id == colorId) as Color;
   }
 
 

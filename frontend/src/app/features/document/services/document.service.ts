@@ -59,4 +59,8 @@ export class DocumentService {
     return this.http.post<any>(`${this.baseUrlTag}`, tags);
   }
 
+  getTags(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrlTag}`);
+  }
+
 }
