@@ -50,3 +50,10 @@ class TagService:
             return self.tag_repository.delete(id).to_dict()
         except DefaultError:
             raise DefaultError('TAG_ERROR', 'ERROR AL BORRAR TAG', 500)
+
+    def find_all_by_ids(self, ids):
+        try:
+            tags = [tag.to_dict() for tag in self.tag_repository.find_all_by_ids(ids)]
+            return tags
+        except DefaultError:
+            raise DefaultError('TAG_ERROR', 'ERROR AL OBTENER TAGS', 500)

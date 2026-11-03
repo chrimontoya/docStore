@@ -69,10 +69,10 @@ export class LibraryComponent implements OnInit {
   }
 
   openUploadDialog(): void {
-    const ref = this.dialogRef.open(UploadDocument);
+    const ref = this.dialogRef.open(UploadDocument, {data: { tags: this.tags }});
     ref.componentInstance.actionEvent.subscribe((res) => {
       if (res) {
-        this.documentsService.uploadFiles(res)
+        this.documentsService.uploadFiles(res.data, res.metadata)
           .subscribe((res) => {
             if (res) {
               ref.close();
@@ -112,15 +112,15 @@ export class LibraryComponent implements OnInit {
     }
   }
 
-  selectTagColor(tagId: number, colorId: number): void {
+  selectTagColor(tagPosition: number, colorId: number): void {
     const color = this.colors.find((item) => item.id === colorId);
 
     if (!color) {
       return;
     }
 
-    this.tags = this.tags.map((tag) =>
-      tag.idTag === tagId
+    this.tags = this.tags.map((tag, index) =>
+      tagPosition === index
         ? new Tag(tag.idTag, tag.tagName, color.id)
         : tag
     );

@@ -45,3 +45,10 @@ class TagRepository:
             db.session.rollback()
             raise DefaultError('SQLERROR', str(e), 500)
 
+    def find_all_by_ids(self, ids):
+        try:
+            tags = db.session.query(Tag).filter(Tag.id.in_(ids)).all()
+            return tags
+        except Exception as e:
+            db.session.rollback()
+            raise DefaultError('SQLERROR', str(e), 500)

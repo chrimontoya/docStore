@@ -24,12 +24,12 @@
   }
 
     <section class="w-100">
-      @for (tag of tags; track tag.idTag) {
+      @for (tag of tags; track $index) {
         <div class="w-100 d-flex-row justify-content-between">
           <app-tag-chip-component [tag]="tag"></app-tag-chip-component>
 
           <div class="d-flex-row">
-            <app-color-picker-component [colors]="colors" [colorSelected]="tag.tagColor" (colorChange)="selectTagColor(tag.idTag, $event.id)"></app-color-picker-component>
+            <app-color-picker-component [colors]="colors" [colorSelected]="tag.tagColor" (colorChange)="selectTagColor($index, $event.id)"></app-color-picker-component>
 
             <button matIconButton (click)="deleteTag(tag)" [disabled]="!tag.idTag">
               <mat-icon color="warn">delete</mat-icon>

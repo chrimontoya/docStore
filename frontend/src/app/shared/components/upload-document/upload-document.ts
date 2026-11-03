@@ -1,5 +1,5 @@
-import {Component, EventEmitter} from '@angular/core';
-import {MatDialogModule} from '@angular/material/dialog';
+import {Component, EventEmitter, inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogModule} from '@angular/material/dialog';
 import {MatButton} from '@angular/material/button';
 import {FileUploadControl, FileUploadModule, FileUploadValidators} from '@iplab/ngx-file-upload';
 import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
@@ -8,6 +8,7 @@ import {MatChipListbox, MatChipOption} from '@angular/material/chips';
 import {Control} from '../../classes/control.class';
 import {createFormGroup} from '../../helpers/form.helper';
 import {ReactiveFormsModule} from '@angular/forms';
+import {Tag} from '../../../core/models/tag.model';
 
 @Component({
   imports: [
@@ -28,6 +29,7 @@ import {ReactiveFormsModule} from '@angular/forms';
   templateUrl: './upload-document.html',
 })
 export class UploadDocument {
+  data = inject(MAT_DIALOG_DATA);
   public readonly fileUploadControl = new FileUploadControl(
     { multiple: true },
     FileUploadValidators.fileSize(80000)
@@ -53,9 +55,21 @@ export class UploadDocument {
     })
   ];
   formGroup = createFormGroup(this.controls, []);
+  selectedTags: number[] = [];
 
   uploadContent() {
-    this.actionEvent.emit(this.fileUploadControl.value);
+    this.actionEvent.emit({data: this.fileUploadControl.value, metadata: this.getMetadata()});
+  }
+
+  onChangeSelectedTag(tags: number[]){
+    this.selectedTags = tags;
+  }
+
+  getMetadata() {
+    return {
+      ...this.formGroup.value,
+      tags: this.selectedTags,
+    }
   }
 
 }

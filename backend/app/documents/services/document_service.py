@@ -29,12 +29,19 @@ class DocumentService:
         self.sql = SQLAlchemyUnitOfWork()
 
     def create(self, files: ImmutableMultiDict[str, FileStorage], formData: ImmutableMultiDict[str,str]):
+        global tags_finded
         try:
+            tags = formData.get('tags', '')
+            if tags:
+                tags_finded = self.tag_service.find_all_by_ids([int(tag) for tag in tags.split(',')])
+
             #falta validar la metadata de formdata
             for file in files.getlist('data'): #iterable
                 owner_user_id = formData.get('user_id', None)
                 folder_id = formData.get('folder_id', None)
                 title = formData.get('title', '')
+
+
                 #validaciones files
                 document_validator = DocumentValidator(file)
                 document_validator.validate_max_size()
@@ -68,21 +75,27 @@ class DocumentService:
                 document_file.checksum = 'temporal'
                 document_file.uploaded_at = datetime.now(timezone.utc)
 
-                tag = Tag()
-                tag.owner_user_id = int(formData.get('user_id', 1))
-                tag.color = 1
-                tag.name = 'Pruebas'
-                tag.created_at = datetime.now(timezone.utc)
+                #buscar tags existentes y utilizarlos para vincularlos al documento
 
-                added_tag = self.tag_service.add_tag(tag)
+
+                # tag = Tag()
+                # tag.owner_user_id = int(formData.get('user_id', 1))
+                # tag.color = 1
+                # tag.name = 'Pruebas'
+                # tag.created_at = datetime.now(timezone.utc)
+                #
+                # added_tag = self.tag_service.add_tag(tag)
 
                 #create documents tag
-                document_tag = DocumentTag()
-                document_tag.tag_id = added_tag.id
-                document_tag.assigned_at = datetime.now(timezone.utc)
-                document_tag.assigned_by_user_id = int(formData.get('user_id', 1))
+                document_tags = []
+                for tag in tags_finded:
+                    document_tag = DocumentTag()
+                    document_tag.tag_id = tag['id']
+                    document_tag.assigned_at = datetime.now(timezone.utc)
+                    document_tag.assigned_by_user_id = int(formData.get('user_id', 1))
+                    document_tags.append(document_tag)
 
-                result = self.document_repository.add_document(document, document_file, document_tag)
+                result = self.document_repository.add_document(document, document_file, document_tags)
 
                 self.activity_repository.add_activity(
                     Activity(

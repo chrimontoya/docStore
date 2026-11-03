@@ -16,14 +16,15 @@ class DocumentRepository:
     def __init__(self):
         pass
 
-    def add_document(self, document, document_file, document_tag):
+    def add_document(self, document, document_file, document_tags):
         try:
             db.session.add(document)
             db.session.flush()
             document_file.document_id = document.id
-            document_tag.document_id = document.id
-            db.session.add_all([document_file, document_tag])
-            return DocumentCreationResult(document, document_file, document_tag)
+            for document_tag in document_tags:
+                document_tag.document_id = document.id
+            db.session.add_all([document_file, *document_tags])
+            return DocumentCreationResult(document, document_file, document_tags)
         except Exception as e:
             db.session.rollback()
             raise DefaultError('SQLERROR', str(e), 500)

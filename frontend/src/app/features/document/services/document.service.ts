@@ -24,8 +24,9 @@ export class DocumentService {
     files.forEach(file => {
       formData.append('data', file, file.name);
     });
-    formData.append('title', 'testing');
-    formData.append('description', 'testing');
+    formData.append('title', metadata.title);
+    formData.append('description', metadata.description);
+    formData.append('tags', metadata.tags);
     return this.http.post<any>(`${this.baseUrl}`, formData, {responseType: 'blob',});
   }
 
